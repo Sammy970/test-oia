@@ -4,7 +4,7 @@ const port = 3000;
 
 app.set("trust proxy", true);
 
-app.get("/abcd", (req, res) => {
+app.get("/insta", (req, res) => {
   const ipAddress =
     req.headers["x-forwarded-for"] || req.connection.remoteAddress;
   console.log(ipAddress);
@@ -22,6 +22,27 @@ app.get("/abcd", (req, res) => {
   } else {
     // Redirect to a web URL as a fallback for non-mobile devices
     res.redirect("https://www.instagram.com/my_art_craft");
+  }
+});
+
+app.get("/linkedin", (req, res) => {
+  const ipAddress =
+    req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  console.log(ipAddress);
+
+  // Check if the request is coming from a mobile device
+  const userAgent = req.headers["user-agent"];
+  const isMobile =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      userAgent
+    );
+
+  if (isMobile) {
+    // Redirect to the deep link URL for the app
+    res.redirect("https://www.linkedin.com/in/samyak-jain-3a6639172");
+  } else {
+    // Redirect to a web URL as a fallback for non-mobile devices
+    res.redirect("https://www.linkedin.com/in/samyak-jain-3a6639172");
   }
 });
 

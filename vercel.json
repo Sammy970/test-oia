@@ -12,7 +12,11 @@
       "dest": "server.js"
     },
     {
-      "src": "/abcd",
+      "src": "/insta",
+      "dest": "server.js"
+    },
+    {
+      "src": "/linkedin",
       "dest": "server.js"
     }
   ]

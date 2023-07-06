@@ -8,7 +8,7 @@ app.get("/abcd", (req, res) => {
   const ipAddress =
     req.headers["x-forwarded-for"] || req.connection.remoteAddress;
   console.log(ipAddress);
-  res.redirect("https://www.instagram.com/my_art_craft");
+  res.redirect("http://test-oia.vercel.app/abcd?link=https://www.instagram.com/my_art_craft");
 });
 
 app.listen(port, () => {

@@ -18,7 +18,7 @@ app.get("/abcd", (req, res) => {
 
   if (isMobile) {
     // Redirect to the deep link URL for the app
-    res.redirect("instagram://user?username=my_art_craft");
+    res.redirect("https://www.instagram.com/p/CUJoVRGoMxT");
   } else {
     // Redirect to a web URL as a fallback for non-mobile devices
     res.redirect("https://www.instagram.com/my_art_craft");

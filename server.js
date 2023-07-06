@@ -8,7 +8,7 @@ app.get("/abcd", (req, res) => {
   const ipAddress =
     req.headers["x-forwarded-for"] || req.connection.remoteAddress;
   console.log(ipAddress);
-  res.redirect("https://www.linkedin.com/in/samyak-jain-3a6639172/");
+  res.redirect("https://www.youtube.com/channel/UC-xe4VSupGvKkMETEmdRrIA");
 });
 
 app.listen(port, () => {

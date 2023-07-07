@@ -15,8 +15,6 @@ app.set("trust proxy", true);
 // Object to store generated codes and their corresponding links
 const codes = {};
 
-const arr = [];
-
 app.get("/", (req, res) => {
   res.send("good");
 });

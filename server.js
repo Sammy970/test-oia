@@ -3,17 +3,17 @@ const express = require("express");
 const { nanoid } = require("nanoid");
 const axios = require("axios");
 const cheerio = require("cheerio");
-const ogs = require("open-graph-scraper");
+// const ogs = require("open-graph-scraper");
 
-const metascraper = require("metascraper")([
-  require("metascraper-description")(),
-  require("metascraper-title")(),
-  require("metascraper-url")(),
-  require("metascraper-image")(),
-  require("metascraper-logo")(),
-  require("metascraper-author")(),
-]);
-const got = require("got");
+// const metascraper = require("metascraper")([
+//   require("metascraper-description")(),
+//   require("metascraper-title")(),
+//   require("metascraper-url")(),
+//   require("metascraper-image")(),
+//   require("metascraper-logo")(),
+//   require("metascraper-author")(),
+// ]);
+// const got = require("got");
 
 // Important Settings
 const app = express();

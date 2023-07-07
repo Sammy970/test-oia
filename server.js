@@ -9,41 +9,48 @@ app.get("/insta", (req, res) => {
     req.headers["x-forwarded-for"] || req.connection.remoteAddress;
   console.log(ipAddress);
 
-  // Check if the request is coming from a mobile device
-  const userAgent = req.headers["user-agent"];
-  const isMobile =
-    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      userAgent
-    );
+  // const instagramLink = req.query.link;
+  const instagramLink = "https://www.instagram.com/p/CUJoVRGoMxT/";
 
-  if (isMobile) {
-    // Redirect to the deep link URL for the app
-    res.redirect("https://www.instagram.com/my_art_craft");
-  } else {
-    // Redirect to a web URL as a fallback for non-mobile devices
-    res.redirect("https://www.instagram.com/my_art_craft");
+  // Check if the link is for a user profile
+  const userRegex =
+    /^https?:\/\/(?:www\.)?instagram\.com\/([a-zA-Z0-9_\.]+)\/?$/;
+  if (userRegex.test(instagramLink)) {
+    const username = instagramLink.match(userRegex)[1];
+    const deepLink = `instagram://user?username=${username}`;
+
+    // Redirect to the user profile deep link
+    res.redirect(deepLink);
+    return;
   }
-});
 
-app.get("/linkedin", (req, res) => {
-  const ipAddress =
-    req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-  console.log(ipAddress);
+  // Check if the link is for a post
+  const postRegex =
+    /^https?:\/\/(?:www\.)?instagram\.com\/p\/([a-zA-Z0-9_\-]+)\/?$/;
+  if (postRegex.test(instagramLink)) {
+    const postId = instagramLink.match(postRegex)[1];
+    const deepLink = `instagram://p/${postId}`;
 
-  // Check if the request is coming from a mobile device
-  const userAgent = req.headers["user-agent"];
-  const isMobile =
-    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      userAgent
-    );
-
-  if (isMobile) {
-    // Redirect to the deep link URL for the app
-    res.redirect("https://www.linkedin.com/in/samyak-jain-3a6639172");
-  } else {
-    // Redirect to a web URL as a fallback for non-mobile devices
-    res.redirect("https://www.linkedin.com/in/samyak-jain-3a6639172");
+    // Redirect to the post deep link
+    res.redirect(deepLink);
+    return;
   }
+
+  // Check if the link is for a story
+  const storyRegex =
+    /^https?:\/\/(?:www\.)?instagram\.com\/stories\/(?:[a-zA-Z0-9_\-]+)\/([a-zA-Z0-9_\-]+)\/?$/;
+  if (storyRegex.test(instagramLink)) {
+    const username = instagramLink.match(storyRegex)[1];
+    const storyId = instagramLink.match(storyRegex)[2];
+    const deepLink = `instagram://stories/${username}/${storyId}`;
+
+    // Redirect to the story deep link
+    res.redirect(deepLink);
+    return;
+  }
+
+  // Fallback: Redirect to the web URL
+  res.redirect(instagramLink);
 });
 
 app.listen(port, () => {

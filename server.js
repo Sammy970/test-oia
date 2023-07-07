@@ -5,15 +5,16 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 // const ogs = require("open-graph-scraper");
 
-// const metascraper = require("metascraper")([
-//   require("metascraper-description")(),
-//   require("metascraper-title")(),
-//   require("metascraper-url")(),
-//   require("metascraper-image")(),
-//   require("metascraper-logo")(),
-//   require("metascraper-author")(),
-// ]);
-// const got = require("got");
+const metascraper = require("metascraper")([
+  require("metascraper-author")(),
+  require("metascraper-description")(),
+  require("metascraper-image")(),
+  require("metascraper-logo")(),
+  require("metascraper-title")(),
+  require("metascraper-url")(),
+]);
+
+const got = require("got");
 
 // Important Settings
 const app = express();
@@ -70,27 +71,27 @@ app.get("/:code", (req, res) => {
   }
 });
 
-async function fetchOGMetadata(url) {
-  try {
-    const response = await axios.get(url);
-    const html = response.data;
-    const $ = cheerio.load(html);
-    const ogMetadata = {};
+// async function fetchOGMetadata(url) {
+//   try {
+//     const response = await axios.get(url);
+//     const html = response.data;
+//     const $ = cheerio.load(html);
+//     const ogMetadata = {};
 
-    $("head meta[property^='og:']").each((index, element) => {
-      const property = $(element).attr("property");
-      const content = $(element).attr("content");
-      ogMetadata[property] = content;
-    });
+//     $("head meta[property^='og:']").each((index, element) => {
+//       const property = $(element).attr("property");
+//       const content = $(element).attr("content");
+//       ogMetadata[property] = content;
+//     });
 
-    console.log(ogMetadata);
+//     console.log(ogMetadata);
 
-    return ogMetadata;
-  } catch (error) {
-    console.error("Error fetching Open Graph metadata:", error);
-    return null;
-  }
-}
+//     return ogMetadata;
+//   } catch (error) {
+//     console.error("Error fetching Open Graph metadata:", error);
+//     return null;
+//   }
+// }
 
 // async function fetchOGMetadata(url) {
 //   try {
@@ -107,19 +108,19 @@ async function fetchOGMetadata(url) {
 //   }
 // }
 
-// async function fetchOGMetadata(url) {
-//   try {
-//     const { body: html, url: finalUrl } = await got(url);
-//     const metadata = await metascraper({ html, url: finalUrl });
+async function fetchOGMetadata(url) {
+  try {
+    const { body: html, url: finalUrl } = await got(url);
+    const metadata = await metascraper({ html, url: finalUrl });
 
-//     console.log(metadata);
+    console.log(metadata);
 
-//     return metadata;
-//   } catch (error) {
-//     console.error("Error fetching Open Graph metadata:", error);
-//     return null;
-//   }
-// }
+    return metadata;
+  } catch (error) {
+    console.error("Error fetching Open Graph metadata:", error);
+    return null;
+  }
+}
 
 function generateHTMLWithOGMetadata(link, ogMetadata) {
   if (!ogMetadata) {

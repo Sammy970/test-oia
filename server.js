@@ -73,6 +73,8 @@ async function fetchOGMetadata(url) {
       ogMetadata[property] = content;
     });
 
+    console.log(ogMetadata);
+
     return ogMetadata;
   } catch (error) {
     console.error("Error fetching Open Graph metadata:", error);

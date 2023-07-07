@@ -42,6 +42,10 @@ app.get("/:code", (req, res) => {
   }
 });
 
+app.get("/getcodes", (req, res) => {
+  res.send(codes);
+});
+
 function generateCode() {
   const chars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

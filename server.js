@@ -36,6 +36,8 @@ app.get("/:code", (req, res) => {
     const { link, ogMetadata } = codeData;
     const html = generateHTMLWithOGMetadata(link, ogMetadata);
 
+    // console.log(html);
+
     // Set the content type to "text/html"
     res.set("Content-Type", "text/html");
 
@@ -97,6 +99,7 @@ function generateHTMLWithOGMetadata(link, ogMetadata) {
   const html = `
     <html>
       <head>
+        <meta charset="utf-8">
         ${metaTags}
       </head>
       <body>

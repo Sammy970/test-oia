@@ -1,12 +1,25 @@
+// Importing Dependencies
 const express = require("express");
+const { nanoid } = require("nanoid");
+
+// Importing Function
+const { fetchOGMetadata } = require("./functions");
+
+// Important Settings
 const app = express();
 const port = 3000;
-const axios = require("axios");
-const cheerio = require("cheerio");
 
+// App Sets
 app.set("trust proxy", true);
 
-const codes = {}; // Object to store generated codes and their corresponding links
+// Object to store generated codes and their corresponding links
+const codes = {};
+
+const arr = [];
+
+app.get("/", (req, res) => {
+  res.send("good");
+});
 
 app.get("/generate", async (req, res) => {
   const link = req.query.link;
@@ -15,7 +28,7 @@ app.get("/generate", async (req, res) => {
   if (getCodes === "yes") {
     res.send(codes);
   } else {
-    const code = generateCode();
+    const code = nanoid(4);
     const ogMetadata = await fetchOGMetadata(link);
     const shortenedLink = `${req.protocol}://${req.get("host")}/${code}`;
 
@@ -48,41 +61,6 @@ app.get("/:code", (req, res) => {
     res.status(404).send("Code not found");
   }
 });
-
-function generateCode() {
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let code = "";
-
-  for (let i = 0; i < 6; i++) {
-    const randomIndex = Math.floor(Math.random() * chars.length);
-    code += chars[randomIndex];
-  }
-
-  return code;
-}
-
-async function fetchOGMetadata(url) {
-  try {
-    const response = await axios.get(url);
-    const html = response.data;
-    const $ = cheerio.load(html);
-    const ogMetadata = {};
-
-    $("head meta[property^='og:']").each((index, element) => {
-      const property = $(element).attr("property");
-      const content = $(element).attr("content");
-      ogMetadata[property] = content;
-    });
-
-    console.log(ogMetadata);
-
-    return ogMetadata;
-  } catch (error) {
-    console.error("Error fetching Open Graph metadata:", error);
-    return null;
-  }
-}
 
 function generateHTMLWithOGMetadata(link, ogMetadata) {
   if (!ogMetadata) {

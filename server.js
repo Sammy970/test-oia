@@ -14,17 +14,18 @@ app.get("/generate", async (req, res) => {
 
   if (getCodes === "yes") {
     res.send(codes);
+  } else {
+    const code = generateCode();
+    const ogMetadata = await fetchOGMetadata(link);
+    const shortenedLink = `${req.protocol}://${req.get("host")}/${code}`;
+
+    codes[code] = {
+      link: link,
+      ogMetadata: ogMetadata,
+    }; // Save the link, ogMetadata, and the generated code
+
+    res.send({ shortenedLink });
   }
-  const code = generateCode();
-  const ogMetadata = await fetchOGMetadata(link);
-  const shortenedLink = `${req.protocol}://${req.get("host")}/${code}`;
-
-  codes[code] = {
-    link: link,
-    ogMetadata: ogMetadata,
-  }; // Save the link, ogMetadata, and the generated code
-
-  res.send({ shortenedLink });
 });
 
 app.get("/:code", (req, res) => {

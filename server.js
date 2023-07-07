@@ -9,8 +9,7 @@ app.get("/insta", (req, res) => {
     req.headers["x-forwarded-for"] || req.connection.remoteAddress;
   console.log(ipAddress);
 
-  // const instagramLink = req.query.link;
-  const instagramLink = "https://www.instagram.com/p/CUJoVRGoMxT/";
+  const instagramLink = req.query.link;
 
   // Check if the link is for a user profile
   const userRegex =

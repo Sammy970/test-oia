@@ -4,54 +4,42 @@ const port = 3000;
 
 app.set("trust proxy", true);
 
-app.get("/insta", (req, res) => {
-  const ipAddress = req.headers["x-forwarded-for"];
-  // console.log(ipAddress);
+const codes = {}; // Object to store generated codes and their corresponding links
 
-  const instagramLink = "https://www.instagram.com/p/CUJoVRGoMxT/";
+app.get("/generate", (req, res) => {
+  const link = req.query.link;
+  const code = generateCode();
 
-  // Check if the link is for a user profile
-  const userRegex =
-    /^https?:\/\/(?:www\.)?instagram\.com\/([a-zA-Z0-9_\.]+)\/?$/;
-  if (userRegex.test(instagramLink)) {
-    const username = instagramLink.match(userRegex)[1];
-    const deepLink = `instagram://user?username=${username}`;
+  codes[code] = link; // Save the link with the generated code
 
-    // Redirect to the user profile deep link
-    res.redirect(deepLink);
-    return;
-  }
-
-  // Check if the link is for a post
-  const postRegex =
-    /^https?:\/\/(?:www\.)?instagram\.com\/p\/([a-zA-Z0-9_\-]+)\/?$/;
-  if (postRegex.test(instagramLink)) {
-    const postId = instagramLink.match(postRegex)[1];
-    const deepLink = `instagram://p/${postId}`;
-
-    console.log(deepLink);
-
-    // Redirect to the post deep link
-    res.redirect(deepLink);
-    return;
-  }
-
-  // Check if the link is for a story
-  const storyRegex =
-    /^https?:\/\/(?:www\.)?instagram\.com\/stories\/(?:[a-zA-Z0-9_\-]+)\/([a-zA-Z0-9_\-]+)\/?$/;
-  if (storyRegex.test(instagramLink)) {
-    const username = instagramLink.match(storyRegex)[1];
-    const storyId = instagramLink.match(storyRegex)[2];
-    const deepLink = `instagram://stories/${username}/${storyId}`;
-
-    // Redirect to the story deep link
-    res.redirect(deepLink);
-    return;
-  }
-  console.log(instagramLink);
-  // Fallback: Redirect to the web URL
-  res.redirect(instagramLink);
+  res.send({ code });
 });
+
+app.get("/:code", (req, res) => {
+  const code = req.params.code;
+  const link = codes[code];
+
+  if (link) {
+    // Redirect to the original link
+    res.redirect(link);
+  } else {
+    // Code not found
+    res.status(404).send("Code not found");
+  }
+});
+
+function generateCode() {
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let code = "";
+
+  for (let i = 0; i < 6; i++) {
+    const randomIndex = Math.floor(Math.random() * chars.length);
+    code += chars[randomIndex];
+  }
+
+  return code;
+}
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

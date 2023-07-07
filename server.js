@@ -5,11 +5,7 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 // const ogs = require("open-graph-scraper");
 
-const metascraperDescription = require("metascraper-description");
-
-const metascraper = require("metascraper")([metascraperDescription()]);
-
-const got = require("got");
+const { fetchOGMetadata, addNumbers, multiplyNumbers } = require("./utils"); // Replace './utils' with the correct path to your utils.js file
 
 // Important Settings
 const app = express();
@@ -21,9 +17,12 @@ app.set("trust proxy", true);
 // Object to store generated codes and their corresponding links
 const codes = {};
 
-// app.get("/", (req, res) => {
-//   res.send("good");
-// });
+app.get("/", async (req, res) => {
+  const sum = addNumbers(5, 3);
+  const product = multiplyNumbers(2, 4);
+  const data = await fetchOGMetadata("https://www.google.com");
+  res.send(data);
+});
 
 app.get("/generate", async (req, res) => {
   const link = req.query.link;
@@ -102,20 +101,6 @@ app.get("/:code", (req, res) => {
 //     return null;
 //   }
 // }
-
-async function fetchOGMetadata(url) {
-  try {
-    const { body: html, url: finalUrl } = await got(url);
-    const metadata = await metascraper({ html, url: finalUrl });
-
-    console.log(metadata);
-
-    return metadata;
-  } catch (error) {
-    console.error("Error fetching Open Graph metadata:", error);
-    return null;
-  }
-}
 
 function generateHTMLWithOGMetadata(link, ogMetadata) {
   if (!ogMetadata) {

@@ -10,8 +10,12 @@ const codes = {}; // Object to store generated codes and their corresponding lin
 
 app.get("/generate", async (req, res) => {
   const link = req.query.link;
-  const code = generateCode();
+  const getCodes = req.query.codes;
 
+  if (getCodes === "yes") {
+    res.send(codes);
+  }
+  const code = generateCode();
   const ogMetadata = await fetchOGMetadata(link);
   const shortenedLink = `${req.protocol}://${req.get("host")}/${code}`;
 
@@ -40,10 +44,6 @@ app.get("/:code", (req, res) => {
     // Code not found
     res.status(404).send("Code not found");
   }
-});
-
-app.get("/getcodes", (req, res) => {
-  res.send(codes);
 });
 
 function generateCode() {

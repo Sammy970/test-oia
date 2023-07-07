@@ -5,14 +5,9 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 // const ogs = require("open-graph-scraper");
 
-const metascraper = require("metascraper")([
-  require("metascraper-author")(),
-  require("metascraper-description")(),
-  require("metascraper-image")(),
-  require("metascraper-logo")(),
-  require("metascraper-title")(),
-  require("metascraper-url")(),
-]);
+const metascraperDescription = require("metascraper-description");
+
+const metascraper = require("metascraper")([metascraperDescription()]);
 
 const got = require("got");
 

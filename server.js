@@ -70,27 +70,27 @@ app.get("/:code", (req, res) => {
   }
 });
 
-// async function fetchOGMetadata(url) {
-//   try {
-//     const response = await axios.get(url);
-//     const html = response.data;
-//     const $ = cheerio.load(html);
-//     const ogMetadata = {};
+async function fetchOGMetadata(url) {
+  try {
+    const response = await axios.get(url);
+    const html = response.data;
+    const $ = cheerio.load(html);
+    const ogMetadata = {};
 
-//     $("head meta[property^='og:']").each((index, element) => {
-//       const property = $(element).attr("property");
-//       const content = $(element).attr("content");
-//       ogMetadata[property] = content;
-//     });
+    $("head meta[property^='og:']").each((index, element) => {
+      const property = $(element).attr("property");
+      const content = $(element).attr("content");
+      ogMetadata[property] = content;
+    });
 
-//     console.log(ogMetadata);
+    console.log(ogMetadata);
 
-//     return ogMetadata;
-//   } catch (error) {
-//     console.error("Error fetching Open Graph metadata:", error);
-//     return null;
-//   }
-// }
+    return ogMetadata;
+  } catch (error) {
+    console.error("Error fetching Open Graph metadata:", error);
+    return null;
+  }
+}
 
 // async function fetchOGMetadata(url) {
 //   try {
@@ -107,19 +107,19 @@ app.get("/:code", (req, res) => {
 //   }
 // }
 
-async function fetchOGMetadata(url) {
-  try {
-    const { body: html, url: finalUrl } = await got(url);
-    const metadata = await metascraper({ html, url: finalUrl });
+// async function fetchOGMetadata(url) {
+//   try {
+//     const { body: html, url: finalUrl } = await got(url);
+//     const metadata = await metascraper({ html, url: finalUrl });
 
-    console.log(metadata);
+//     console.log(metadata);
 
-    return metadata;
-  } catch (error) {
-    console.error("Error fetching Open Graph metadata:", error);
-    return null;
-  }
-}
+//     return metadata;
+//   } catch (error) {
+//     console.error("Error fetching Open Graph metadata:", error);
+//     return null;
+//   }
+// }
 
 function generateHTMLWithOGMetadata(link, ogMetadata) {
   if (!ogMetadata) {
@@ -132,7 +132,7 @@ function generateHTMLWithOGMetadata(link, ogMetadata) {
     if (Object.hasOwnProperty.call(ogMetadata, property)) {
       const content = ogMetadata[property];
       // console.log(content);
-      metaTags += `<meta property="og${property}" content="${content}" />`;
+      metaTags += `<meta property="${property}" content="${content}" />`;
     }
   }
 

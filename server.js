@@ -92,7 +92,7 @@ function generateHTMLWithOGMetadata(link, ogMetadata) {
   const metaTags = Object.entries(ogMetadata)
     .map(
       ([property, content]) =>
-        `<meta property="${property}" content="${content}" />`
+        `<meta property="${property}" content='${content}' />`
     )
     .join("\n");
 

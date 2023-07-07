@@ -5,11 +5,10 @@ const port = 3000;
 app.set("trust proxy", true);
 
 app.get("/insta", (req, res) => {
-  const ipAddress =
-    req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-  console.log(ipAddress);
+  const ipAddress = req.headers["x-forwarded-for"];
+  // console.log(ipAddress);
 
-  const instagramLink = req.query.link;
+  const instagramLink = "https://www.instagram.com/p/CUJoVRGoMxT/";
 
   // Check if the link is for a user profile
   const userRegex =
@@ -30,6 +29,8 @@ app.get("/insta", (req, res) => {
     const postId = instagramLink.match(postRegex)[1];
     const deepLink = `instagram://p/${postId}`;
 
+    console.log(deepLink);
+
     // Redirect to the post deep link
     res.redirect(deepLink);
     return;
@@ -47,7 +48,7 @@ app.get("/insta", (req, res) => {
     res.redirect(deepLink);
     return;
   }
-
+  console.log(instagramLink);
   // Fallback: Redirect to the web URL
   res.redirect(instagramLink);
 });

@@ -1,0 +1,18 @@
+{
+  "_id": {
+    "$oid": "64a954669dca62c5ed5c7386"
+  },
+  "3f4d": {
+    "code": "",
+    "link": "https://practice.geeksforgeeks.org/problems/find-triplets-with-zero-sum/1",
+    "ogMetadata": {
+      "og:title": "Find triplets with zero sum | Practice | GeeksforGeeks ",
+      "og:description": "Given an array arr[]&nbsp;of&nbsp;n integers. Check whether it contains a triplet that sums up to zero.&nbsp;\nNote: Return 1, if there is at least one triplet following the condition else return 0.\nExample 1:\nInput: n = 5, arr[] = {0, -1, 2, -3, 1}\nO",
+      "og:image": "https://media.geeksforgeeks.org/img-practice/gfg_200X200.png",
+      "og:image:alt": "GeeksforGeeks",
+      "og:image:type": "image/png",
+      "og:image:width": "200",
+      "og:image:height": "200"
+    }
+  }
+}

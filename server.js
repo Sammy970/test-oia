@@ -6,7 +6,10 @@ const cheerio = require("cheerio");
 
 //Importing MongoDriver
 const { MongoClient } = require("mongodb");
-const URI = "mongodb+srv://samyakjain:samyak%40123@oia-db.2ueqlzg.mongodb.net/";
+// const URI = "mongodb+srv://samyakjain:samyak%40123@oia-db.2ueqlzg.mongodb.net/";
+const URI =
+  process.env.MONGODB_URI ||
+  "mongodb+srv://samyakjain:samyak%40123@oia-db.2ueqlzg.mongodb.net/";
 
 const client = new MongoClient(URI);
 

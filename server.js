@@ -3,6 +3,8 @@ const express = require("express");
 const { nanoid } = require("nanoid");
 const axios = require("axios");
 const cheerio = require("cheerio");
+const dotenv = require("dotenv");
+dotenv.config();
 
 //Importing MongoDriver
 const { MongoClient } = require("mongodb");

@@ -6,9 +6,10 @@ const cheerio = require("cheerio");
 const dotenv = require("dotenv");
 dotenv.config();
 
+const { connectToDatabase } = require("./lib/mongodb");
+
 //Importing MongoDriver
 const { MongoClient } = require("mongodb");
-// const URI = "mongodb+srv://samyakjain:samyak%40123@oia-db.2ueqlzg.mongodb.net/";
 const URI = process.env.MONGODB_URI;
 
 const client = new MongoClient(URI);
@@ -24,13 +25,9 @@ app.set("trust proxy", true);
 const codes = {};
 
 app.get("/", async (req, res) => {
-  console.log(process.env.MONGODB_URI);
-  await client.connect();
-  const database = client.db("Data");
-  const collection = database.collection("getCodes");
-
-  const data = await collection.findOne({ "4asdsd4d": { $exists: true } });
-  res.send(data);
+  const { database } = await connectToDatabase();
+  const collection = database.collection(process.env.MONGODB_COLLECTION1);
+  res.send("done");
 });
 
 app.get("/generate", async (req, res) => {

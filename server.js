@@ -3,7 +3,6 @@ const express = require("express");
 const { nanoid } = require("nanoid");
 const axios = require("axios");
 const cheerio = require("cheerio");
-const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -21,14 +20,6 @@ const port = 3000;
 
 // App Sets
 app.set("trust proxy", true);
-
-app.use(
-  cors({
-    origin: ["https://oia.vercel.app"],
-    methods: ["POST", "GET"],
-    credentials: true,
-  })
-);
 
 app.use(express.json());
 

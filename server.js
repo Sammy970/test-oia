@@ -3,7 +3,6 @@ const express = require("express");
 const { nanoid } = require("nanoid");
 const axios = require("axios");
 const cheerio = require("cheerio");
-// const ogs = require("open-graph-scraper");
 
 // Important Settings
 const app = express();
@@ -81,21 +80,6 @@ async function fetchOGMetadata(url) {
     return null;
   }
 }
-
-// async function fetchOGMetadata(url) {
-//   try {
-//     const options = { url };
-//     const { result } = await ogs(options);
-//     // const ogMetadata = result ? result.ogTitle : null;
-
-//     console.log(result);
-
-//     return result;
-//   } catch (error) {
-//     console.error("Error fetching Open Graph metadata:", error);
-//     return null;
-//   }
-// }
 
 function generateHTMLWithOGMetadata(link, ogMetadata) {
   if (!ogMetadata) {

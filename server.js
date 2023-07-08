@@ -7,9 +7,7 @@ const cheerio = require("cheerio");
 //Importing MongoDriver
 const { MongoClient } = require("mongodb");
 // const URI = "mongodb+srv://samyakjain:samyak%40123@oia-db.2ueqlzg.mongodb.net/";
-const URI =
-  process.env.MONGODB_URI ||
-  "mongodb+srv://samyakjain:samyak%40123@oia-db.2ueqlzg.mongodb.net/";
+const URI = process.env.MONGODB_URI;
 
 const client = new MongoClient(URI);
 
@@ -24,6 +22,7 @@ app.set("trust proxy", true);
 const codes = {};
 
 app.get("/", async (req, res) => {
+  console.log(process.env.MONGODB_URI);
   await client.connect();
   const database = client.db("Data");
   const collection = database.collection("getCodes");

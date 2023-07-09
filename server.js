@@ -6,8 +6,6 @@ const cheerio = require("cheerio");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const { connectToDatabase } = require("./lib/mongodb");
-
 //Importing MongoDriver
 const { MongoClient } = require("mongodb");
 const URI = process.env.MONGODB_URI;
@@ -26,10 +24,8 @@ app.use(express.json());
 // Object to store generated codes and their corresponding links
 const codes = {};
 
-app.get("/", async (req, res) => {
-  const { database } = await connectToDatabase();
-  const collection = database.collection(process.env.MONGODB_COLLECTION1);
-  res.send("done");
+app.get("/", (req, res) => {
+  res.send("Started");
 });
 
 app.get("/generate", async (req, res) => {

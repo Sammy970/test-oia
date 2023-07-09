@@ -55,14 +55,16 @@ app.get("/generate", async (req, res) => {
 
         if (response.status === 201) {
           const dataResponse = await response.json();
-          return res.json(dataResponse);
+          const status = dataResponse.status;
+          res.statusCode = 201;
+          return res.send({ shortenedLink, status });
         } else {
-          return res.json({ error: "Error in storing the link data" });
+          return res.json({
+            error: "Error in storing the link data",
+          });
         }
       } catch (error) {
         console.log("Error in storeLinks API CALL", error);
-      } finally {
-        res.send({ shortenedLink });
       }
     } else {
       res.statusCode = 401;
@@ -96,7 +98,7 @@ app.get("/:code", async (req, res) => {
       ogLink = dataResponse[code].link;
       ogMetadata = dataResponse[code].ogMetadata;
 
-      const html = generateHTMLWithOGMetadata(ogLink, ogMetadata);
+      const html = await generateHTMLWithOGMetadata(ogLink, ogMetadata);
 
       // Set the content type to "text/html"
       res.set("Content-Type", "text/html");

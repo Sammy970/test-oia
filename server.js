@@ -39,8 +39,8 @@ app.get("/generate", async (req, res) => {
       };
 
       try {
-        // const apiURL = "https://oia-second-backend.vercel.app/api/storeLinks";
-        const apiURL = "http://localhost:3001/api/storeLinks ";
+        const apiURL = "https://oia-second-backend.vercel.app/api/storeLinks";
+        // const apiURL = "http://localhost:3001/api/storeLinks";
         const bodyContent = {
           data: newData,
         };
@@ -76,8 +76,8 @@ app.get("/:code", async (req, res) => {
   // const codeData = codes[code];
 
   try {
-    // const apiURL = "https://oia-second-backend.vercel.app/api/fetchLinks";
-    const apiURL = "http://localhost:3001/api/fetchLinks ";
+    const apiURL = "https://oia-second-backend.vercel.app/api/fetchLinks";
+    // const apiURL = "http://localhost:3001/api/fetchLinks ";
     const bodyContent = {
       data: code,
     };

@@ -25,37 +25,91 @@ app.get("/generate", async (req, res) => {
   if (getCodes === "yes") {
     res.send(codes);
   } else {
-    const code = nanoid(4);
     const ogMetadata = await fetchOGMetadata(link);
-    const shortenedLink = `${req.protocol}://${req.get("host")}/${code}`;
+    const code = nanoid(4);
+    if (ogMetadata !== "error") {
+      const shortenedLink = `${req.protocol}://${req.get("host")}/${code}`;
 
-    codes[code] = {
-      link: link,
-      ogMetadata: ogMetadata,
-    }; // Save the link, ogMetadata, and the generated code
+      const newData = {
+        _id: nanoid(24), // Generate a new ObjectId for the document
+        [code]: {
+          link: link,
+          ogMetadata,
+        },
+      };
 
-    res.send({ shortenedLink });
+      try {
+        // const apiURL = "https://oia-second-backend.vercel.app/api/storeLinks";
+        const apiURL = "http://localhost:3001/api/storeLinks ";
+        const bodyContent = {
+          data: newData,
+        };
+
+        const options = {
+          method: "POST",
+          body: JSON.stringify(bodyContent),
+          headers: { "Content-Type": "application/json" },
+        };
+
+        const response = await fetch(apiURL, options);
+
+        if (response.status === 201) {
+          const dataResponse = await response.json();
+          return res.json(dataResponse);
+        } else {
+          return res.json({ error: "Error in storing the link data" });
+        }
+      } catch (error) {
+        console.log("Error in storeLinks API CALL", error);
+      } finally {
+        res.send({ shortenedLink });
+      }
+    } else {
+      res.statusCode = 401;
+      return res.json({ error: "Paste Good Link" });
+    }
   }
 });
 
-app.get("/:code", (req, res) => {
+app.get("/:code", async (req, res) => {
   const code = req.params.code;
-  const codeData = codes[code];
+  // const codeData = codes[code];
 
-  if (codeData) {
-    const { link, ogMetadata } = codeData;
-    const html = generateHTMLWithOGMetadata(link, ogMetadata);
+  try {
+    // const apiURL = "https://oia-second-backend.vercel.app/api/fetchLinks";
+    const apiURL = "http://localhost:3001/api/fetchLinks ";
+    const bodyContent = {
+      data: code,
+    };
 
-    console.log(html);
+    const options = {
+      method: "POST",
+      body: JSON.stringify(bodyContent),
+      headers: { "Content-Type": "application/json" },
+    };
 
-    // Set the content type to "text/html"
-    res.set("Content-Type", "text/html");
+    const response = await fetch(apiURL, options);
 
-    // Send the HTML response with the Open Graph metadata
-    res.send(html);
-  } else {
-    // Code not found
-    res.status(404).send("Code not found");
+    if (response.status === 201) {
+      const dataResponse = await response.json();
+
+      ogLink = dataResponse[code].link;
+      ogMetadata = dataResponse[code].ogMetadata;
+
+      const html = generateHTMLWithOGMetadata(ogLink, ogMetadata);
+
+      // Set the content type to "text/html"
+      res.set("Content-Type", "text/html");
+
+      // Send the HTML response with the Open Graph metadata
+      return res.send(html);
+    } else {
+      return res.status(404).send("Code not found");
+    }
+
+    // console.log(body);
+  } catch (error) {
+    console.log("Error in fetchLinks API CALL", error);
   }
 });
 
@@ -77,7 +131,7 @@ async function fetchOGMetadata(url) {
     return ogMetadata;
   } catch (error) {
     console.error("Error fetching Open Graph metadata:", error);
-    return null;
+    return "error";
   }
 }
 
@@ -103,6 +157,7 @@ function generateHTMLWithOGMetadata(link, ogMetadata) {
         ${metaTags}
       </head>
       <body>
+        <h1>OpenInApp Clone</h1>
         <p>Redirecting...</p>
         <script>
           window.location.href = "${link}";

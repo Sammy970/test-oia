@@ -3,14 +3,6 @@ const express = require("express");
 const { nanoid } = require("nanoid");
 const axios = require("axios");
 const cheerio = require("cheerio");
-const dotenv = require("dotenv");
-dotenv.config();
-
-//Importing MongoDriver
-const { MongoClient } = require("mongodb");
-const URI = process.env.MONGODB_URI;
-
-const client = new MongoClient(URI);
 
 // Important Settings
 const app = express();
@@ -19,13 +11,11 @@ const port = 3000;
 // App Sets
 app.set("trust proxy", true);
 
-app.use(express.json());
-
 // Object to store generated codes and their corresponding links
 const codes = {};
 
-app.get("/", (req, res) => {
-  res.send("Started");
+app.get("/", async (req, res) => {
+  res.send("Good");
 });
 
 app.get("/generate", async (req, res) => {
@@ -39,62 +29,33 @@ app.get("/generate", async (req, res) => {
     const ogMetadata = await fetchOGMetadata(link);
     const shortenedLink = `${req.protocol}://${req.get("host")}/${code}`;
 
-    try {
-      await client.connect();
-      const database = client.db("Data");
-      const collection = database.collection("getCodes");
+    codes[code] = {
+      link: link,
+      ogMetadata: ogMetadata,
+    }; // Save the link, ogMetadata, and the generated code
 
-      const newData = {
-        _id: nanoid(24), // Generate a new ObjectId for the document
-        [code]: {
-          link: link,
-          ogMetadata,
-        },
-      };
-
-      console.log(newData);
-
-      await collection.insertOne(newData);
-
-      await client.close();
-    } catch (error) {
-      console.log("MongoDB Error", error);
-    } finally {
-      res.send({ shortenedLink });
-    }
+    res.send({ shortenedLink });
   }
 });
 
-app.get("/:code", async (req, res) => {
+app.get("/:code", (req, res) => {
   const code = req.params.code;
+  const codeData = codes[code];
 
-  let link;
-  let ogMetadata;
-
-  try {
-    await client.connect();
-    const database = client.db("Data");
-    const collection = database.collection("getCodes");
-
-    const data = await collection.findOne({ [code]: { $exists: true } });
-
-    link = data[code].link;
-    ogMetadata = data[code].ogMetadata;
-
-    await client.close();
-  } catch (error) {
-    console.log("MongoDB Error", error);
-  } finally {
-    // console.log(link, ogMetadata);
+  if (codeData) {
+    const { link, ogMetadata } = codeData;
     const html = generateHTMLWithOGMetadata(link, ogMetadata);
+
+    console.log(html);
 
     // Set the content type to "text/html"
     res.set("Content-Type", "text/html");
 
-    console.log(html);
-
     // Send the HTML response with the Open Graph metadata
     res.send(html);
+  } else {
+    // Code not found
+    res.status(404).send("Code not found");
   }
 });
 

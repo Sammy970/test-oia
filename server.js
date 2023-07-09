@@ -95,6 +95,8 @@ app.get("/:code", async (req, res) => {
     // Set the content type to "text/html"
     res.set("Content-Type", "text/html");
 
+    console.log(html);
+
     // Send the HTML response with the Open Graph metadata
     res.send(html);
   }
@@ -133,7 +135,7 @@ function generateHTMLWithOGMetadata(link, ogMetadata) {
     if (Object.hasOwnProperty.call(ogMetadata, property)) {
       const content = ogMetadata[property];
       // console.log(content);
-      metaTags += `<meta property="${property}" content="${content}" />`;
+      metaTags += `<meta property="${property}" content='${content}' />`;
     }
   }
 

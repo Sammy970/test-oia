@@ -25,50 +25,50 @@ app.get("/generate", async (req, res) => {
   if (getCodes === "yes") {
     res.send(codes);
   } else {
-    const ogMetadata = await fetchOGMetadata(link);
+    let ogMetadata = await fetchOGMetadata(link);
     const code = nanoid(4);
-    if (ogMetadata !== "error") {
-      const shortenedLink = `${req.protocol}://${req.get("host")}/${code}`;
 
-      const newData = {
-        _id: nanoid(24), // Generate a new ObjectId for the document
-        [code]: {
-          link: link,
-          ogMetadata,
-        },
+    if (ogMetadata === "error") {
+      ogMetadata = null;
+    }
+
+    const shortenedLink = `${req.protocol}://${req.get("host")}/${code}`;
+
+    const newData = {
+      _id: nanoid(24), // Generate a new ObjectId for the document
+      [code]: {
+        link: link,
+        ogMetadata,
+      },
+    };
+
+    try {
+      const apiURL = "https://oia-second-backend.vercel.app/api/storeLinks";
+      // const apiURL = "http://localhost:3001/api/storeLinks";
+      const bodyContent = {
+        data: newData,
       };
 
-      try {
-        const apiURL = "https://oia-second-backend.vercel.app/api/storeLinks";
-        // const apiURL = "http://localhost:3001/api/storeLinks";
-        const bodyContent = {
-          data: newData,
-        };
+      const options = {
+        method: "POST",
+        body: JSON.stringify(bodyContent),
+        headers: { "Content-Type": "application/json" },
+      };
 
-        const options = {
-          method: "POST",
-          body: JSON.stringify(bodyContent),
-          headers: { "Content-Type": "application/json" },
-        };
+      const response = await fetch(apiURL, options);
 
-        const response = await fetch(apiURL, options);
-
-        if (response.status === 201) {
-          const dataResponse = await response.json();
-          const status = dataResponse.status;
-          res.statusCode = 201;
-          return res.send({ shortenedLink, status });
-        } else {
-          return res.json({
-            error: "Error in storing the link data",
-          });
-        }
-      } catch (error) {
-        console.log("Error in storeLinks API CALL", error);
+      if (response.status === 201) {
+        const dataResponse = await response.json();
+        const status = dataResponse.status;
+        res.statusCode = 201;
+        return res.send({ shortenedLink, status });
+      } else {
+        return res.json({
+          error: "Error in storing the link data",
+        });
       }
-    } else {
-      res.statusCode = 401;
-      return res.json({ error: "Paste Good Link" });
+    } catch (error) {
+      console.log("Error in storeLinks API CALL", error);
     }
   }
 });
@@ -128,11 +128,11 @@ async function fetchOGMetadata(url) {
       ogMetadata[property] = content;
     });
 
-    console.log(ogMetadata);
+    // console.log(ogMetadata);
 
     return ogMetadata;
   } catch (error) {
-    console.error("Error fetching Open Graph metadata:", error);
+    console.error("Error fetching Open Graph metadata:");
     return "error";
   }
 }

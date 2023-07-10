@@ -144,6 +144,8 @@ async function fetchOGMetadata(url) {
       ogMetadata[property] = content;
     });
 
+    console.log(ogMetadata);
+
     // console.log(ogMetadata);
 
     return ogMetadata;

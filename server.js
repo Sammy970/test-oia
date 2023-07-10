@@ -3,13 +3,15 @@ const express = require("express");
 const { nanoid } = require("nanoid");
 const axios = require("axios");
 const cheerio = require("cheerio");
+const cors = require("cors");
 
 // Important Settings
 const app = express();
-const port = 3000;
+const port = 3003;
 
 // App Sets
 app.set("trust proxy", true);
+app.use(cors());
 
 // Object to store generated codes and their corresponding links
 const codes = {};
@@ -20,6 +22,8 @@ app.get("/", async (req, res) => {
 
 app.get("/generate", async (req, res) => {
   const link = req.query.link;
+  const email = req.query.email;
+  // console.log(email);
   const getCodes = req.query.codes;
 
   if (getCodes === "yes") {
@@ -58,11 +62,27 @@ app.get("/generate", async (req, res) => {
       },
     };
 
+    const newData2 = {
+      code: code,
+      link: link,
+      ogMetadata,
+    };
+
+    const newData3 = {
+      _id: nanoid(24),
+      [email]: {
+        codes: [newData2],
+      },
+    };
+
     try {
       const apiURL = "https://oia-second-backend.vercel.app/api/storeLinks";
-      // const apiURL = "http://localhost:3001/api/storeLinks";
+      // const apiURL = "http://localhost:3000/api/storeLinks";
       const bodyContent = {
         data: newData,
+        email: email,
+        data2: newData2,
+        newUsersData: newData3,
       };
 
       const options = {
@@ -72,6 +92,8 @@ app.get("/generate", async (req, res) => {
       };
 
       const response = await fetch(apiURL, options);
+
+      // console.log(response.status);
 
       if (response.status === 201) {
         const dataResponse = await response.json();

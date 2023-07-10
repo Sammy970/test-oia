@@ -28,8 +28,24 @@ app.get("/generate", async (req, res) => {
     let ogMetadata = await fetchOGMetadata(link);
     const code = nanoid(4);
 
-    if (ogMetadata === "error") {
-      ogMetadata = null;
+    if (ogMetadata === null) {
+      const apiURL = `https://py-meta.vercel.app?url=${link}`;
+      const response = await fetch(apiURL);
+      const resData = await response.json();
+      // console.log(resData);
+
+      if (Object.keys(resData).length === 0) {
+        ogMetadata = null;
+      } else {
+        const modifiedOgMetadata = {};
+
+        for (const key in resData) {
+          if (resData.hasOwnProperty(key)) {
+            modifiedOgMetadata["og:" + key] = resData[key];
+          }
+        }
+        ogMetadata = modifiedOgMetadata;
+      }
     }
 
     const shortenedLink = `${req.protocol}://${req.get("host")}/${code}`;
@@ -133,7 +149,7 @@ async function fetchOGMetadata(url) {
     return ogMetadata;
   } catch (error) {
     console.error("Error fetching Open Graph metadata:");
-    return "error";
+    return null;
   }
 }
 

@@ -121,7 +121,7 @@ app.get("/:code", async (req, res) => {
   // const codeData = codes[code];
 
   try {
-    const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    const ip = req.headers["x-forwarded-for"];
     console.log(ip);
     const resData = await fetch(`http://ip-api.com/json/${ip}`);
     const ipData = await resData.json();

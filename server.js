@@ -124,7 +124,8 @@ app.get("/:code", async (req, res) => {
   console.log(ip);
 
   try {
-    const ipData = await fetch(`http://ip-api.com/json/${ip}`);
+    const resData = await fetch(`http://ip-api.com/json/${ip}`);
+    const ipData = resData.json();
     console.log(ipData);
   } catch (error) {
     console.log("Error in getting data of IP Address", error);

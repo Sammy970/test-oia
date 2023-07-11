@@ -120,6 +120,16 @@ app.get("/:code", async (req, res) => {
   const code = req.params.code;
   // const codeData = codes[code];
 
+  var ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+  console.log(ip);
+
+  try {
+    const ipData = await fetch(`http://ip-api.com/json/${ip}`);
+    console.log(ipData);
+  } catch (error) {
+    console.log("Error in getting data of IP Address", error);
+  }
+
   try {
     const apiURL = "https://oia-second-backend.vercel.app/api/fetchLinks";
     // const apiURL = "http://localhost:3001/api/fetchLinks ";

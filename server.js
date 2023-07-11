@@ -4,8 +4,6 @@ const { nanoid } = require("nanoid");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const cors = require("cors");
-const useragent = require("express-useragent");
-const geoip = require("geoip-lite");
 
 // Important Settings
 const app = express();
@@ -122,12 +120,9 @@ app.get("/:code", async (req, res) => {
   const code = req.params.code;
   // const codeData = codes[code];
 
-  var ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-  console.log(ip);
-
-  await trackLinkClick(code, req.useragent, ip);
-
   try {
+    const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    console.log(ip);
     const resData = await fetch(`http://ip-api.com/json/${ip}`);
     const ipData = await resData.json();
     console.log(ipData);
@@ -229,23 +224,6 @@ function generateHTMLWithOGMetadata(link, ogMetadata) {
   `;
 
   return html;
-}
-
-function trackLinkClick(code, useragent, ipAddress) {
-  // const { browser, os } = useragent;
-
-  console.log(useragent);
-
-  // const device = {
-  //   browser: browser.name,
-  //   version: browser.version,
-  //   os: os.name,
-  //   platform: os.platform,
-  // };
-
-  // // Log the device and location information
-  // console.log("Device:", device);
-  // console.log("Location:", location);
 }
 
 app.listen(port, () => {

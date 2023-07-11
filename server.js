@@ -62,17 +62,22 @@ app.get("/generate", async (req, res) => {
       },
     };
 
+    // const newData2 = {
+    //   code: code,
+    //   link: link,
+    //   ogMetadata,
+    // };
+
     const newData2 = {
-      code: code,
-      link: link,
-      ogMetadata,
+      [code]: {
+        link: link,
+        ogMetadata,
+      },
     };
 
     const newData3 = {
       _id: nanoid(24),
-      [email]: {
-        codes: [newData2],
-      },
+      [email]: [newData2],
     };
 
     try {

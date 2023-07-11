@@ -4,6 +4,8 @@ const { nanoid } = require("nanoid");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const cors = require("cors");
+const useragent = require("express-useragent");
+const geoip = require("geoip-lite");
 
 // Important Settings
 const app = express();
@@ -12,6 +14,7 @@ const port = 3003;
 // App Sets
 app.set("trust proxy", true);
 app.use(cors());
+app.use(useragent.express());
 
 // Object to store generated codes and their corresponding links
 const codes = {};
@@ -23,7 +26,6 @@ app.get("/", async (req, res) => {
 app.get("/generate", async (req, res) => {
   const link = req.query.link;
   const email = req.query.email;
-  // console.log(email);
   const getCodes = req.query.codes;
 
   if (getCodes === "yes") {
@@ -36,7 +38,6 @@ app.get("/generate", async (req, res) => {
       const apiURL = `https://py-meta.vercel.app?url=${link}`;
       const response = await fetch(apiURL);
       const resData = await response.json();
-      // console.log(resData);
 
       if (Object.keys(resData).length === 0) {
         ogMetadata = null;
@@ -55,18 +56,12 @@ app.get("/generate", async (req, res) => {
     const shortenedLink = `${req.protocol}://${req.get("host")}/${code}`;
 
     const newData = {
-      _id: nanoid(24), // Generate a new ObjectId for the document
+      _id: nanoid(24),
       [code]: {
         link: link,
         ogMetadata,
       },
     };
-
-    // const newData2 = {
-    //   code: code,
-    //   link: link,
-    //   ogMetadata,
-    // };
 
     const newData2 = {
       [code]: {
@@ -82,7 +77,6 @@ app.get("/generate", async (req, res) => {
 
     try {
       const apiURL = "https://oia-second-backend.vercel.app/api/storeLinks";
-      // const apiURL = "http://localhost:3000/api/storeLinks";
       const bodyContent = {
         data: newData,
         email: email,
@@ -97,8 +91,6 @@ app.get("/generate", async (req, res) => {
       };
 
       const response = await fetch(apiURL, options);
-
-      // console.log(response.status);
 
       if (response.status === 201) {
         const dataResponse = await response.json();
@@ -118,22 +110,12 @@ app.get("/generate", async (req, res) => {
 
 app.get("/:code", async (req, res) => {
   const code = req.params.code;
-  // const codeData = codes[code];
 
-  var ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-  console.log(ip);
-
-  try {
-    const resData = await fetch(`http://ip-api.com/json/${ip}`);
-    const ipData = await resData.json();
-    console.log(ipData);
-  } catch (error) {
-    console.log("Error in getting data of IP Address", error);
-  }
+  // Track link click
+  trackLinkClick(code, req.useragent, req.ip);
 
   try {
     const apiURL = "https://oia-second-backend.vercel.app/api/fetchLinks";
-    // const apiURL = "http://localhost:3001/api/fetchLinks ";
     const bodyContent = {
       data: code,
     };
@@ -162,8 +144,6 @@ app.get("/:code", async (req, res) => {
     } else {
       return res.status(404).send("Code not found");
     }
-
-    // console.log(body);
   } catch (error) {
     console.log("Error in fetchLinks API CALL", error);
   }
@@ -182,10 +162,6 @@ async function fetchOGMetadata(url) {
       ogMetadata[property] = content;
     });
 
-    console.log(ogMetadata);
-
-    // console.log(ogMetadata);
-
     return ogMetadata;
   } catch (error) {
     console.error("Error fetching Open Graph metadata:");
@@ -203,7 +179,6 @@ function generateHTMLWithOGMetadata(link, ogMetadata) {
   for (const property in ogMetadata) {
     if (Object.hasOwnProperty.call(ogMetadata, property)) {
       const content = ogMetadata[property];
-      // console.log(content);
       metaTags += `<meta property="${property}" content='${content}' />`;
     }
   }
@@ -225,6 +200,28 @@ function generateHTMLWithOGMetadata(link, ogMetadata) {
   `;
 
   return html;
+}
+
+function trackLinkClick(code, useragent, ipAddress) {
+  const { browser, os } = useragent;
+
+  const device = {
+    browser: browser.name,
+    version: browser.version,
+    os: os.name,
+    platform: os.platform,
+  };
+
+  const geo = geoip.lookup(ipAddress);
+
+  const location = {
+    city: geo ? geo.city : "Unknown",
+    state: geo ? geo.region : "Unknown",
+  };
+
+  // Log the device and location information
+  console.log("Device:", device);
+  console.log("Location:", location);
 }
 
 app.listen(port, () => {

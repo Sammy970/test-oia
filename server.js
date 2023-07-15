@@ -4,6 +4,8 @@ const { nanoid } = require("nanoid");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const cors = require("cors");
+const dotenv = require("dotenv");
+dotenv.config();
 
 // Important Settings
 const app = express();
@@ -32,25 +34,67 @@ app.get("/generate", async (req, res) => {
     let ogMetadata = await fetchOGMetadata(link);
     const code = nanoid(4);
 
-    if (ogMetadata === null) {
+    const valueCheck = Object.keys(ogMetadata).length === 0;
+
+    if (valueCheck) {
       const apiURL = `https://py-meta.vercel.app?url=${link}`;
-      const response = await fetch(apiURL);
-      const resData = await response.json();
-      // console.log(resData);
+      try {
+        const response = await fetch(apiURL);
+        const resData = await response.json();
+        if (Object.keys(resData).length === 0) {
+          ogMetadata = {};
+        } else {
+          const modifiedOgMetadata = {};
 
-      if (Object.keys(resData).length === 0) {
-        ogMetadata = null;
-      } else {
-        const modifiedOgMetadata = {};
-
-        for (const key in resData) {
-          if (resData.hasOwnProperty(key)) {
-            modifiedOgMetadata["og:" + key] = resData[key];
+          for (const key in resData) {
+            if (resData.hasOwnProperty(key)) {
+              modifiedOgMetadata["og:" + key] = resData[key];
+            }
           }
+          ogMetadata = modifiedOgMetadata;
         }
-        ogMetadata = modifiedOgMetadata;
+      } catch (error) {
+        console.log("Error at PY Meta Backend ", error);
+      } finally {
+        if (Object.keys(ogMetadata).length === 0) {
+          // console.log("I am in if");
+          try {
+            const apiKey = process.env.OPENGRAPHIO_APPID;
+            const apiURL = `https://opengraph.io/api/1.1/site/${encodeURIComponent(
+              link
+            )}?app_id=${apiKey}`;
+
+            const response = await fetch(apiURL);
+            const data = await response.json();
+
+            if (Object.keys(data).toString() === "error") {
+              console.log(data);
+              console.log("We got some error");
+              ogMetadata = {};
+            } else {
+              // console.log("I am in this");
+              const ogData = {
+                "og:title": data.htmlInferred.title,
+                "og:description": data.htmlInferred.description,
+                "og:type": data.htmlInferred.type,
+                "og:image": data.htmlInferred.image,
+                "og:url": data.htmlInferred.url,
+                "og:favicon": data.htmlInferred.favicon,
+                "og:site_name": data.htmlInferred.site_name,
+              };
+
+              ogMetadata = ogData;
+            }
+          } catch (error) {
+            console.log("Error at OpenGraph.io API Call: ", error);
+          }
+        } else {
+          console.log("I am in else");
+        }
       }
     }
+
+    // console.log(ogMetadata);
 
     const shortenedLink = `${req.protocol}://${req.get("host")}/${code}`;
 
@@ -188,7 +232,7 @@ async function fetchOGMetadata(url) {
     return ogMetadata;
   } catch (error) {
     console.error("Error fetching Open Graph metadata:");
-    return null;
+    return {};
   }
 }
 

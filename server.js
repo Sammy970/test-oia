@@ -103,6 +103,7 @@ app.get("/generate", async (req, res) => {
       [code]: {
         link: link,
         ogMetadata,
+        clicks: 0,
       },
     };
 
@@ -116,6 +117,7 @@ app.get("/generate", async (req, res) => {
       [code]: {
         link: link,
         ogMetadata,
+        clicks: 0,
       },
     };
 
@@ -126,7 +128,7 @@ app.get("/generate", async (req, res) => {
 
     try {
       const apiURL = "https://oia-second-backend.vercel.app/api/storeLinks";
-      // const apiURL = "http://localhost:3000/api/storeLinks";
+      // const apiURL = "http://localhost:3001/api/storeLinks";
       const bodyContent = {
         data: newData,
         email: email,
@@ -164,15 +166,18 @@ app.get("/:code", async (req, res) => {
   const code = req.params.code;
   // const codeData = codes[code];
 
+  let ipData;
+
   try {
     const ip = req.headers["x-forwarded-for"];
     console.log(ip);
     const resData = await fetch(`http://ip-api.com/json/${ip}`);
-    const ipData = await resData.json();
-    console.log(ipData);
+    ipData = await resData.json();
   } catch (error) {
     console.log("Error in getting data of IP Address", error);
   }
+
+  console.log(ipData);
 
   try {
     const apiURL = "https://oia-second-backend.vercel.app/api/fetchLinks";

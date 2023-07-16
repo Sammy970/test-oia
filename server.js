@@ -77,7 +77,7 @@ app.get("/generate", async (req, res) => {
                 "og:title": data.htmlInferred.title,
                 "og:description": data.htmlInferred.description,
                 "og:type": data.htmlInferred.type,
-                "og:image": data.htmlInferred.image,
+                "og:image": data.htmlInferred.imageSecureUrl,
                 "og:url": data.htmlInferred.url,
                 "og:favicon": data.htmlInferred.favicon,
                 "og:site_name": data.htmlInferred.site_name,

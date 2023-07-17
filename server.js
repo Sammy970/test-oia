@@ -107,17 +107,10 @@ app.get("/generate", async (req, res) => {
       },
     };
 
-    // const newData2 = {
-    //   code: code,
-    //   link: link,
-    //   ogMetadata,
-    // };
-
     const newData2 = {
       [code]: {
         link: link,
         ogMetadata,
-        clicks: 0,
       },
     };
 

@@ -178,9 +178,14 @@ app.get("/:code", async (req, res) => {
     console.log(ip);
     const resData = await fetch(`http://ip-api.com/json/${ip}`);
     ipData = await resData.json();
-    var uaString = parser(req.headers["user-agent"]);
   } catch (error) {
     console.log("Error in getting data of IP Address", error);
+  }
+
+  try {
+    var uaString = parser(req.headers["user-agent"]);
+  } catch (error) {
+    console.log("Error in getting user Agent");
   }
 
   // console.log(ipData);
@@ -189,6 +194,7 @@ app.get("/:code", async (req, res) => {
   const state = ipData.regionName;
   const country = ipData.country;
   const osName = uaString.os.name;
+
   console.log(osName);
   // const city = "Mumbai";
 

@@ -4,6 +4,7 @@ const { nanoid } = require("nanoid");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const cors = require("cors");
+const parser = require("ua-parser-js");
 const dotenv = require("dotenv");
 
 dotenv.config();
@@ -24,8 +25,9 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/agent", async (req, res) => {
-  const userAgent = req.get("User-Agent");
-  res.send(userAgent);
+  // const userAgent = req.get("User-Agent");
+  var ua = parser(req.headers["user-agent"]);
+  res.send(ua);
 });
 
 app.get("/generate", async (req, res) => {

@@ -24,11 +24,14 @@ app.get("/", async (req, res) => {
   res.send("Good");
 });
 
-app.get("/agent", async (req, res) => {
-  // const userAgent = req.get("User-Agent");
-  var ua = parser(req.headers["user-agent"]);
-  res.send(ua);
-});
+// app.get("/agent", async (req, res) => {
+//   // const userAgent = req.get("User-Agent");
+//   var uaString = parser(req.headers["user-agent"]);
+//  const osName = (uaString.os.name);
+
+//   const osNameString = osName ? osName.toString() : "Unknown";
+//   res.send(osNameString);
+// });
 
 app.get("/generate", async (req, res) => {
   const link = req.query.link;
@@ -175,6 +178,7 @@ app.get("/:code", async (req, res) => {
     console.log(ip);
     const resData = await fetch(`http://ip-api.com/json/${ip}`);
     ipData = await resData.json();
+    var uaString = parser(req.headers["user-agent"]);
   } catch (error) {
     console.log("Error in getting data of IP Address", error);
   }
@@ -184,6 +188,8 @@ app.get("/:code", async (req, res) => {
   const city = ipData.city;
   const state = ipData.regionName;
   const country = ipData.country;
+  const osName = uaString.os.name;
+  console.log(osName);
   // const city = "Mumbai";
 
   try {
@@ -194,6 +200,7 @@ app.get("/:code", async (req, res) => {
       city: city,
       state: state,
       country: country,
+      osName: osName,
     };
 
     const options = {

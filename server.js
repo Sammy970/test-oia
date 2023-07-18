@@ -5,7 +5,6 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const useragent = require("express-useragent");
 
 dotenv.config();
 
@@ -15,7 +14,6 @@ const port = 3003;
 
 // App Sets
 app.set("trust proxy", true);
-app.use(useragent.express());
 app.use(cors());
 
 // Object to store generated codes and their corresponding links
@@ -26,7 +24,8 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/agent", async (req, res) => {
-  res.send(req.useragent);
+  const userAgent = req.get("User-Agent");
+  res.send(userAgent);
 });
 
 app.get("/generate", async (req, res) => {

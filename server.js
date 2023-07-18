@@ -104,6 +104,7 @@ app.get("/generate", async (req, res) => {
         link: link,
         ogMetadata,
         clicks: 0,
+        fromWhere: {},
       },
     };
 

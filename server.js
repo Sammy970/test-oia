@@ -171,7 +171,7 @@ app.get("/:code", async (req, res) => {
     console.log("Error in getting data of IP Address", error);
   }
 
-  console.log(ipData);
+  // console.log(ipData);
 
   const city = ipData.city;
   // const city = "Mumbai";
@@ -192,6 +192,8 @@ app.get("/:code", async (req, res) => {
 
     const response = await fetch(apiURL, options);
 
+    // console.log(response.status);
+
     if (response.status === 201) {
       const dataResponse = await response.json();
 
@@ -200,13 +202,14 @@ app.get("/:code", async (req, res) => {
 
       const html = await generateHTMLWithOGMetadata(ogLink, ogMetadata);
 
+      console.log(html);
       // Set the content type to "text/html"
       res.set("Content-Type", "text/html");
 
       // Send the HTML response with the Open Graph metadata
       return res.send(html);
     } else {
-      return res.status(404).send("Code not found");
+      return res.status(response.status).send("Code not found");
     }
 
     // console.log(body);

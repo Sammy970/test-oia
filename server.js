@@ -174,6 +174,7 @@ app.get("/:code", async (req, res) => {
   // console.log(ipData);
 
   const city = ipData.city;
+  const state = ipData.regionName;
   // const city = "Mumbai";
 
   try {
@@ -182,6 +183,7 @@ app.get("/:code", async (req, res) => {
     const bodyContent = {
       data: code,
       city: city,
+      state: state,
     };
 
     const options = {

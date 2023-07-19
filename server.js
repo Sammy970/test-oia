@@ -193,10 +193,14 @@ app.get("/:code", async (req, res) => {
   const city = ipData.city;
   const state = ipData.regionName;
   const country = ipData.country;
-  const osName = uaString.os.name;
+  let osName = uaString.os.name;
 
   console.log(osName);
   // const city = "Mumbai";
+
+  if (osName === undefined || osName === null) {
+    osName = null;
+  }
 
   try {
     const apiURL = "https://oia-second-backend.vercel.app/api/fetchLinks";

@@ -232,8 +232,8 @@ app.get("/:code", async (req, res) => {
   }
 
   try {
-    // const apiURL = "https://oia-second-backend.vercel.app/api/fetchLinks";
-    const apiURL = "http://localhost:3001/api/fetchLinks ";
+    const apiURL = "https://oia-second-backend.vercel.app/api/fetchLinks";
+    // const apiURL = "http://localhost:3001/api/fetchLinks ";
     const bodyContent = {
       data: code,
       city: city,
@@ -246,6 +246,8 @@ app.get("/:code", async (req, res) => {
       time: time,
       day: day,
     };
+
+    console.log(bodyContent);
 
     const options = {
       method: "POST",

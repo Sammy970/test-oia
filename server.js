@@ -33,6 +33,18 @@ app.get("/", async (req, res) => {
 //   res.send(osNameString);
 // });
 
+// app.get("/date", (req, res) => {
+//   const currentDate = new Date();
+//   // res.send(currentDate);
+//   const dateData = {
+//     day: currentDate.getDate(),
+//     month: currentDate.getMonth() + 1,
+//     year: currentDate.getFullYear(),
+//     time: currentDate.toTimeString().slice(0, 8),
+//   };
+//   res.json(dateData);
+// });
+
 app.get("/generate", async (req, res) => {
   const link = req.query.link;
   const email = req.query.email;
@@ -79,16 +91,22 @@ app.get("/generate", async (req, res) => {
             const data = await response.json();
 
             if (Object.keys(data).toString() === "error") {
-              console.log(data);
               console.log("We got some error");
               ogMetadata = {};
             } else {
+              let imageurl;
+              if (data.htmlInferred.imageSecureUrl === undefined) {
+                imageurl = data.htmlInferred.image;
+              } else {
+                imageurl = data.htmlInferred.imageSecureUrl;
+              }
+
               // console.log("I am in this");
               const ogData = {
                 "og:title": data.htmlInferred.title,
                 "og:description": data.htmlInferred.description,
                 "og:type": data.htmlInferred.type,
-                "og:image": data.htmlInferred.imageSecureUrl,
+                "og:image": imageurl,
                 "og:url": data.htmlInferred.url,
                 "og:favicon": data.htmlInferred.favicon,
                 "og:site_name": data.htmlInferred.site_name,
@@ -188,6 +206,20 @@ app.get("/:code", async (req, res) => {
     console.log("Error in getting user Agent");
   }
 
+  let date, month, year, time, day;
+
+  try {
+    const currentDate = new Date();
+    // res.send(currentDate);
+    date = currentDate.getDate();
+    month = currentDate.getMonth() + 1;
+    year = currentDate.getFullYear();
+    time = currentDate.toTimeString().slice(0, 8);
+    day = currentDate.getDay();
+  } catch (error) {
+    console.log("Error in getting user date");
+  }
+
   // console.log(ipData);
 
   const city = ipData.city;
@@ -200,14 +232,19 @@ app.get("/:code", async (req, res) => {
   }
 
   try {
-    const apiURL = "https://oia-second-backend.vercel.app/api/fetchLinks";
-    // const apiURL = "http://localhost:3001/api/fetchLinks ";
+    // const apiURL = "https://oia-second-backend.vercel.app/api/fetchLinks";
+    const apiURL = "http://localhost:3001/api/fetchLinks ";
     const bodyContent = {
       data: code,
       city: city,
       state: state,
       country: country,
       osName: osName,
+      date: date,
+      month: month,
+      year: year,
+      time: time,
+      day: day,
     };
 
     const options = {

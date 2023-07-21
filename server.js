@@ -20,15 +20,15 @@ app.use(cors());
 // Object to store generated codes and their corresponding links
 const codes = {};
 
-app.use((req, res, next) => {
-  if (req.hostname.startsWith("insta.")) {
-    console.log("I am in");
-    // Remove the "insta" part from the hostname
-    req.url = req.url.replace(/^\/insta/, "");
-    console.log(req.url);
-  }
-  next();
-});
+// app.use((req, res, next) => {
+//   if (req.hostname.startsWith("insta.")) {
+//     console.log("I am in");
+//     // Remove the "insta" part from the hostname
+//     req.url = req.url.replace(/^\/insta/, "");
+//     console.log(req.url);
+//   }
+//   next();
+// });
 
 app.get("/", async (req, res) => {
   res.send("Good");

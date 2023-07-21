@@ -20,30 +20,19 @@ app.use(cors());
 // Object to store generated codes and their corresponding links
 const codes = {};
 
+app.use((req, res, next) => {
+  if (req.hostname.startsWith("insta.")) {
+    console.log("I am in");
+    // Remove the "insta" part from the hostname
+    req.url = req.url.replace(/^\/insta/, "");
+    console.log(req.url);
+  }
+  next();
+});
+
 app.get("/", async (req, res) => {
   res.send("Good");
 });
-
-// app.get("/agent", async (req, res) => {
-//   // const userAgent = req.get("User-Agent");
-//   var uaString = parser(req.headers["user-agent"]);
-//  const osName = (uaString.os.name);
-
-//   const osNameString = osName ? osName.toString() : "Unknown";
-//   res.send(osNameString);
-// });
-
-// app.get("/date", (req, res) => {
-//   const currentDate = new Date();
-//   // res.send(currentDate);
-//   const dateData = {
-//     day: currentDate.getDate(),
-//     month: currentDate.getMonth() + 1,
-//     year: currentDate.getFullYear(),
-//     time: currentDate.toTimeString().slice(0, 8),
-//   };
-//   res.json(dateData);
-// });
 
 app.get("/generate", async (req, res) => {
   const link = req.query.link;
@@ -232,8 +221,8 @@ app.get("/:code", async (req, res) => {
   }
 
   try {
-    const apiURL = "https://oia-second-backend.vercel.app/api/fetchLinks";
-    // const apiURL = "http://localhost:3001/api/fetchLinks ";
+    // const apiURL = "https://oia-second-backend.vercel.app/api/fetchLinks";
+    const apiURL = "http://localhost:3001/api/fetchLinks ";
     const bodyContent = {
       data: code,
       city: city,

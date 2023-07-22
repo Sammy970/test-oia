@@ -312,19 +312,59 @@ function generateHTMLWithOGMetadata(link, ogMetadata) {
   }
 
   const html = `
-    <html>
-      <head>
-        <meta charset="utf-8">
-        ${metaTags}
-      </head>
-      <body>
-        <h1>OpenInApp Clone</h1>
-        <p>Redirecting...</p>
-        <script>
-          window.location.href = "${link}";
-        </script>
-      </body>
-    </html>
+  <html>
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    ${metaTags}
+  </head>
+  <style>
+    body {
+      background-color: #ffff;
+    }
+    h1 {
+      justify-content: center;
+      text-align: center;
+      padding: auto;
+    }
+    .animate__animated {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 200px;
+    }
+    .logo {
+      padding-top: 50px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 200px;
+    }
+    @media (max-width: 1250px)  {
+      logo {
+        width: 20px;
+      }
+    }
+  </style>
+  <body>
+    <h1>
+      <span> Your Link is Ready to Open</span>
+    </h1>
+    <img
+      class="animate__animated animate__backInleft"
+      src="./Redirecting/3425201_59903.jpg"
+      alt=""
+    />
+    <img class="logo" src="./Redirecting/logo.svg" />
+    <script>
+      window.location.href = "${link}";
+    </script>
+  </body>
+</html>
+
   `;
 
   return html;

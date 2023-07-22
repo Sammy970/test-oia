@@ -17,6 +17,8 @@ const port = 3003;
 app.set("trust proxy", true);
 app.use(cors());
 
+app.use(express.static("public"));
+
 // Object to store generated codes and their corresponding links
 const codes = {};
 
@@ -355,10 +357,10 @@ function generateHTMLWithOGMetadata(link, ogMetadata) {
     </h1>
     <img
       class="animate__animated animate__backInleft"
-      src="./Redirecting/3425201_59903.jpg"
+      src="https://raw.githubusercontent.com/Sammy970/test-oia/main/public/html.jpg"
       alt=""
     />
-    <img class="logo" src="./Redirecting/logo.svg" />
+    <img class="logo" src="https://raw.githubusercontent.com/Sammy970/test-oia/main/public/logo.svg" />
     <script>
       window.location.href = "${link}";
     </script>

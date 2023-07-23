@@ -6,6 +6,7 @@ const cheerio = require("cheerio");
 const cors = require("cors");
 const parser = require("ua-parser-js");
 const dotenv = require("dotenv");
+const path = require("path");
 
 dotenv.config();
 
@@ -265,7 +266,9 @@ app.get("/:code", async (req, res) => {
       // Send the HTML response with the Open Graph metadata
       return res.send(html);
     } else {
-      return res.status(response.status).send("Code not found");
+      return res
+        .status(response.status)
+        .sendFile(path.join(__dirname, "/NotFound/notfound.html"));
     }
 
     // console.log(body);
@@ -317,6 +320,8 @@ function generateHTMLWithOGMetadata(link, ogMetadata) {
   <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
@@ -368,7 +373,7 @@ function generateHTMLWithOGMetadata(link, ogMetadata) {
       margin-top: 20px;
     }
 
-    @media only screen and (max-width: 768px) {
+    @media (max-width: 768px) {
       .section1 .title {
         font-size: 28px;
       }

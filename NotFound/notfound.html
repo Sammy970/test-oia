@@ -1,0 +1,144 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Kanit&display=swap");
+    body {
+      background-color: #ffc91f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .section1 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .section1 .logo {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 500px;
+      margin-bottom: 50px;
+    }
+
+    .section1 .title {
+      justify-content: center;
+      text-align: center;
+      font-size: 34px;
+      font-family: "Kanit", sans-serif;
+    }
+
+    .section1 .errorImage {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 600px;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: auto auto;
+      padding: 10px;
+      justify-content: space-between;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .grid-item {
+      padding: 20px;
+      font-size: 30px;
+      text-align: center;
+      align-items: center;
+    }
+    .left-side {
+      display: flex;
+      text-align: center;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .home-btn {
+      padding: 15px 20px;
+      border-radius: 7px;
+      background-color: #0f0f0e;
+      color: white;
+      font-size: 28px;
+      font-family: "Kanit", sans-serif;
+    }
+
+    .home-btn .a-tag {
+      text-decoration: none;
+      color: white;
+      padding: 15px;
+    }
+
+    @media (max-width: 830px) {
+      .section1 .title {
+        font-size: 50px;
+      }
+      .grid-container {
+        flex-direction: column;
+        justify-content: center;
+      }
+      .section1 .logo {
+        width: 300px;
+      }
+      .section1 .errorImage {
+        width: 400px;
+      }
+      .home-btn {
+        padding: 15px 20px;
+        font-size: 18px;
+      }
+    }
+  </style>
+  <body>
+    <section class="section1">
+      <div class="grid-container">
+        <div class="grid-item">
+          <div class="left-side">
+            <img
+              class="logo"
+              src="https://raw.githubusercontent.com/Sammy970/test-oia/768cdef5076c0903381a24c565cd18faf38ac4d5/public/logo.svg"
+            />
+
+            <button class="home-btn">
+              <a class="a-tag" href="https://linkkar.vercel.app">
+                <i
+                  style="margin-right: 10px"
+                  class="fa-solid fa-circle-chevron-left fa-beat fa-lg"
+                ></i>
+                Back to Home
+              </a>
+            </button>
+          </div>
+        </div>
+        <div class="grid-item">
+          <img
+            class="errorImage"
+            src="https://raw.githubusercontent.com/Sammy970/test-oia/main/public/error.svg"
+          />
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

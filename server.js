@@ -321,46 +321,72 @@ function generateHTMLWithOGMetadata(link, ogMetadata) {
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     ${metaTags}
   </head>
   <style>
+    @import url("https://fonts.googleapis.com/css2?family=Kanit&display=swap");
     body {
-      background-color: #ffff;
+      background-color: #ffc91f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-    h1 {
+
+    .section1 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .section1 .title {
       justify-content: center;
       text-align: center;
-      padding: auto;
+      font-size: 34px;
+      font-family: "Kanit", sans-serif;
     }
-    .animate__animated {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      width: 200px;
-    }
-    .logo {
+
+    .section1 .logo {
       padding-top: 50px;
       display: block;
       margin-left: auto;
       margin-right: auto;
-      width: 200px;
+      width: 350px;
     }
-    @media (max-width: 1250px)  {
-      logo {
-        width: 20px;
+
+    .section1 .loadingLogo {
+      margin-top: 20px;
+    }
+    .section1 svg {
+      margin-top: 20px;
+    }
+
+    @media only screen and (max-width: 768px) {
+      .section1 .title {
+        font-size: 28px;
       }
     }
   </style>
   <body>
-    <h1>
-      <span> Your Link is Ready to Open</span>
-    </h1>
-    <img
-      class="animate__animated animate__backInleft"
-      src="https://raw.githubusercontent.com/Sammy970/test-oia/main/public/html.jpg"
-      alt=""
-    />
-    <img class="logo" src="https://raw.githubusercontent.com/Sammy970/test-oia/main/public/logo.svg" />
+    <section class="section1">
+      <h1 class="title">Your Link is getting ready....</h1>
+      <i class="fa-solid fa-spinner fa-spin fa-2xl"></i>
+      <img
+        class="logo"
+        src="https://raw.githubusercontent.com/Sammy970/test-oia/main/public/logo.svg"
+      />
+      <img
+        class="loadingLogo"
+        src="https://raw.githubusercontent.com/Sammy970/test-oia/main/public/bridge-road-animate.svg"
+      />
+    </section>
     <script>
       window.location.href = "${link}";
     </script>
